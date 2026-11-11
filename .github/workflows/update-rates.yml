@@ -4,6 +4,7 @@ name: update-rates
 on:
   schedule:
     - cron: "45 0 * * *"   # 06:15 IST — new USD rate
+    - cron: "45 4 * * *"   # 10:15 IST — Tamil Nadu jewellers' rate (set around 9:30)
     - cron: "30 7 * * *"   # 13:00 IST — IBJA morning rate
     - cron: "45 12 * * *"  # 18:15 IST — IBJA evening rate
   workflow_dispatch: {}     # "Run workflow" button for a manual update

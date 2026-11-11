@@ -6,9 +6,11 @@ Runs a few times a day in GitHub Actions (see .github/workflows/update-rates.yml
 the app downloads the published rates.json. Standard library only. No API keys.
 
 Sources
-  Gold, silver : IBJA (India Bullion and Jewellers Association), https://ibjarates.com —
-                 the national benchmark rate, excluding GST and making charges.
-                 Read from the data the page embeds for its own charts.
+  Gold, silver : Tamil Nadu jewellers' daily board rate (one rate for the whole state —
+                 what shops like GRT and Lalithaa quote), as listed by LiveChennai, https://www.livechennai.com/gold_silverrate.asp.
+                 Excludes GST (3%) and making charges. The app shows this first.
+                 Backup / national benchmark: IBJA (India Bullion and Jewellers Association),
+                 https://ibjarates.com, read from the data the page embeds for its own charts.
   USD → INR    : ExchangeRate-API open access, https://open.er-api.com (attribution required:
                  "Rates By Exchange Rate API", shown in the app).
   Petrol/diesel: fuel.json in this folder, updated by hand when oil companies change the
@@ -80,6 +82,48 @@ def ibja() -> dict:
     }
 
 
+def tamilnadu(ibja_g22: float | None) -> dict:
+    page = get("https://www.livechennai.com/gold_silverrate.asp")
+
+    def rows(table_class: str) -> list[list[str]]:
+        m = re.search(r'<table[^>]*class="[^"]*\b%s\b[^"]*"[^>]*>(.*?)</table>' % table_class, page, re.S)
+        if not m:
+            raise ValueError(f"LiveChennai layout changed: table {table_class} not found")
+        out = []
+        for tr in re.findall(r"<tr[^>]*>(.*?)</tr>", m.group(1), re.S):
+            cells = [re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", td))).strip()
+                     for td in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", tr, re.S)]
+            if cells and re.match(r"\d{2}/[A-Za-z]{3}/\d{4}$", cells[0]):
+                out.append(cells)
+        if len(out) < 2:
+            raise ValueError(f"LiveChennai table {table_class}: too few rows")
+        return out
+
+    def iso(label: str) -> str:
+        return datetime.strptime(label, "%d/%b/%Y").date().isoformat()
+
+    def num(cell: str) -> float:
+        return float(re.match(r"[\d,]+(?:\.\d+)?", cell).group(0).replace(",", ""))
+
+    gold = rows("gold-rates")      # date | 24K 1g | 24K 8g | 22K 1g | 22K 8g
+    silver = rows("silver-rates")  # date | 1g | 1kg
+    g22, p22 = num(gold[0][3]), num(gold[1][3])
+    g24, p24 = num(gold[0][1]), num(gold[1][1])
+    sg, psg = num(silver[0][1]), num(silver[1][1])
+    # Guard against a mis-read table: the shop rate stays within a few % of the IBJA rate.
+    if ibja_g22 and not 0.9 < g22 / ibja_g22 < 1.1:
+        raise ValueError(f"LiveChennai 22K {g22} too far from IBJA {ibja_g22}")
+    if not (g24 > g22 > 1000 and 10 < sg < 10000):
+        raise ValueError(f"LiveChennai values look wrong: {g24} {g22} {sg}")
+    return {
+        "date": iso(gold[0][0]), "prevDate": iso(gold[1][0]),
+        "g22": g22, "prev22": p22, "g24": g24, "prev24": p24,
+        "sovereign22": round(g22 * GRAMS_PER_SOVEREIGN),
+        "silverDate": iso(silver[0][0]), "silverGram": sg, "silverPrev": psg,
+        "source": "LiveChennai (Tamil Nadu jewellers' board rate)",
+    }
+
+
 def usd(previous: dict | None) -> dict:
     d = json.loads(get("https://open.er-api.com/v6/latest/USD"))
     if d.get("result") != "success":
@@ -103,6 +147,12 @@ def main() -> int:
         for k in ("gold", "silver", "history"):
             if k in old:
                 out[k] = old[k]
+    try:
+        out["tn"] = tamilnadu((out.get("gold") or {}).get("g22"))
+    except Exception as e:
+        errors.append(f"tn: {e}")
+        if "tn" in old:
+            out["tn"] = old["tn"]
     try:
         out["usd"] = usd(old.get("usd"))
     except Exception as e:

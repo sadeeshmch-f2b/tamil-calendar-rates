@@ -1,7 +1,8 @@
 # Daily rates for the நாட்காட்டி app
 
 `rates.json` here is what the app shows as today's gold, silver, USD and fuel prices.
-A free GitHub Actions job updates it three times a day; GitHub Pages serves it.
+A free GitHub Actions job updates it four times a day; GitHub Pages serves it.
+Live copy: https://sadeeshmch-f2b.github.io/tamil-calendar-rates/rates.json
 
 ## One-time setup (about 10 minutes)
 
@@ -21,9 +22,11 @@ prices change only a few times a year.
 
 ## Notes
 
-- Gold/silver: IBJA benchmark rates, **excluding GST and making charges**; jewellery shop
-  board rates in Chennai differ slightly. IBJA does not publish on holidays/weekends — the
-  last published rate stays.
+- Gold/silver (`tn`): the Tamil Nadu jewellers' daily board rate — one rate for the whole state,
+  what GRT, Lalithaa etc. show — read from LiveChennai's rate table, **excluding GST (3%) and making charges**.
+  The app shows this. A sanity check rejects it if 22K is more than 10% away from IBJA.
+- Gold/silver (`gold`, `silver`): IBJA national benchmark, used by the app only when the
+  Tamil Nadu rate is missing. IBJA does not publish on holidays/weekends — the last rate stays.
 - USD: open.er-api.com (free, updated daily) — the app shows "Rates By Exchange Rate API".
 - If a source fails, the previous values are kept and an `errors` field is added.
 - GitHub disables scheduled workflows in repos with no activity for 60 days; the bot's own
