@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generatedAt": "2026-11-14T12:33+05:30",
+ "generatedAt": "2026-11-15T12:43+05:30",
  "gold": {
   "date": "2026-11-13",
   "prevDate": "2026-11-12",
@@ -39,22 +39,22 @@
   ]
  },
  "tn": {
-  "date": "2026-11-14",
-  "prevDate": "2026-11-13",
+  "date": "2026-11-15",
+  "prevDate": "2026-11-14",
   "g22": 12615.0,
-  "prev22": 12695.0,
+  "prev22": 12615.0,
   "g24": 13762.0,
-  "prev24": 13849.0,
+  "prev24": 13762.0,
   "sovereign22": 100920,
-  "silverDate": "2026-11-14",
+  "silverDate": "2026-11-15",
   "silverGram": 195.0,
   "silverPrev": 195.0,
   "source": "LiveChennai (Tamil Nadu jewellers' board rate)"
  },
  "usd": {
-  "date": "2026-11-14",
-  "inr": 94.29,
-  "prev": 94.09,
+  "date": "2026-11-15",
+  "inr": 94.26,
+  "prev": 94.29,
   "source": "Rates By Exchange Rate API"
  },
  "fuel": {
