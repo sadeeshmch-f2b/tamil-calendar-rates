@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generatedAt": "2026-11-24T05:52+05:30",
+ "generatedAt": "2026-11-24T15:56+05:30",
  "gold": {
   "date": "2026-11-23",
   "prevDate": "2026-11-20",
@@ -39,14 +39,14 @@
   ]
  },
  "tn": {
-  "date": "2026-11-23",
-  "prevDate": "2026-11-22",
-  "g22": 11600.0,
-  "prev22": 11465.0,
-  "g24": 12655.0,
-  "prev24": 12507.0,
-  "sovereign22": 92800,
-  "silverDate": "2026-11-23",
+  "date": "2026-11-24",
+  "prevDate": "2026-11-23",
+  "g22": 11715.0,
+  "prev22": 11600.0,
+  "g24": 12780.0,
+  "prev24": 12655.0,
+  "sovereign22": 93720,
+  "silverDate": "2026-11-24",
   "silverGram": 175.0,
   "silverPrev": 175.0,
   "source": "LiveChennai (Tamil Nadu jewellers' board rate)"
