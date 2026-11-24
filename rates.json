@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generatedAt": "2026-11-23T20:51+05:30",
+ "generatedAt": "2026-11-24T05:52+05:30",
  "gold": {
   "date": "2026-11-23",
   "prevDate": "2026-11-20",
@@ -52,9 +52,9 @@
   "source": "LiveChennai (Tamil Nadu jewellers' board rate)"
  },
  "usd": {
-  "date": "2026-11-23",
-  "inr": 92.75,
-  "prev": 92.89,
+  "date": "2026-11-24",
+  "inr": 93.0,
+  "prev": 92.75,
   "source": "Rates By Exchange Rate API"
  },
  "fuel": {
